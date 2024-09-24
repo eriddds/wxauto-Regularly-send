@@ -1,7 +1,7 @@
 #wxauto-Regularly-send#
 
 #致命问题因为有些用户运行会发生报错。所有报错的log在dist文件夹中如果无法使用，可以下载python环境并安装wxauto库来运行“微信发送.py”程序
-#The fatal issue is that some users may encounter errors while running. If all error logs cannot be used in the dist folder, you can download the Python environment and install the wxauto library to run the "WeChat Send. py" program
+#The fatal issue is that some users may encounter errors while running. If all error logs cannot be used in the dist folder, you can download the Python environment and install the wxauto library to run the "微信发送.py" program
 
 #Chinese：
 一个非常简单的python自动程序，使用教程：
