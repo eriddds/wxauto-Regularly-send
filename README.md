@@ -1,6 +1,9 @@
 #wxauto-Regularly-send#
 
-Chinese：
+#致命问题因为有些用户运行会发生报错。所有报错的log在dist文件夹中如果无法使用，可以下载python环境并安装wxauto库来运行“微信发送.py”程序
+#The fatal issue is that some users may encounter errors while running. If all error logs cannot be used in the dist folder, you can download the Python environment and install the wxauto library to run the "微信发送.py" program
+
+#Chinese：
 一个非常简单的python自动程序，使用教程：
 打开dist文件夹，打开主程序，输入你想要的时间
 举个例子：
@@ -18,7 +21,7 @@ Chinese：
 Windows版本微信客户端自动化，可实现简单的发送、接收微信消息、保存聊天图片
 3.9.11.17版本微信安装包下载：https://github.com/tom-snow/wechat-windows-versions/releases/download/v3.9.8.15/WeChatSetup-3.9.8.15.exe
 
-English：
+#English：
 A very simple Python automation program, tutorial on how to use it:
 Open the dist folder, open the main program, and enter the time you want. For example:
 2024 # This represents the year

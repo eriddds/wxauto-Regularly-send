@@ -1,4 +1,5 @@
 import time
+
 import wxauto
 
 nowtime = time.localtime()
@@ -41,7 +42,9 @@ def spend(name,time_get,what):
         if geee == time_get:
             wx = wxauto.WeChat()
             wx.SendMsg(msg=what,who=how)
+            print('===='*12)
             print(f'已发送至"{name}"群聊或联系人，信息为：{what}')
+            time.sleep(2)
             break
     print('已完成')
 
