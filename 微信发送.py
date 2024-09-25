@@ -1,38 +1,142 @@
 import time
-
 import wxauto
+import PySimpleGUI as sg
 
 nowtime = time.localtime()
 print(nowtime)
 print(f'现在时间为：{nowtime[0]}年{nowtime[1]}月{nowtime[2]}日{nowtime[3]}点{nowtime[4]}分{nowtime[5]}秒\n详情：目前是{nowtime[0]}中的第{nowtime[-2]}天')
 
-def get_wanttime():
-    a = ['年份year','月份month','日day','时','分','秒']
-    team = []
-    z = time.localtime()
-    for i in range(len(a)):
-        while True:
-            try:
-                WantTime = int(input(f'{a[i]}:'))
-            except:
-                print('错误:请输入数字！！！')
-            else:
-                if WantTime < z[i]:
-                    if a[i] == '秒':
-                        break
-                    else:
-                        print('时间不能小于当前（时间无法倒流^_^）')
-                else:
-                    break
-        team.append(WantTime)
-    return team
-
-def get_how():
-    name = input('请输入联系人名称:')
-    what = input('你要发送的信息：')
-    return name,what
-
 def spend(name,time_get,what):
+    while True:
+        z = time.localtime()
+        geee = [z[0],z[1],z[2],z[3],z[4],z[5]]
+        print(time_get)
+        print(geee)
+        print('===='*12)
+        if geee == time_get:
+            wx = wxauto.WeChat()
+            wx.SendMsg(msg=what,who=name)
+            sg.Popup(f'已发送至"{name}"群聊或联系人，信息为：{what}',font=('黑体',20))
+            break
+    print('已完成')
+
+def init_window0():
+    layout1 = [
+        [sg.B('中文', font=('黑体', 20)), sg.T('      '), sg.B('English', font=('黑体', 20))],
+        [sg.B('定时发送', font=('黑体'), key='-2-')],
+        [sg.B('自动回复', font=('黑体'), key='-3-')],
+        [sg.T(size=(40, 5))]
+    ]
+    window = sg.Window('微信自动程序', layout1)
+    while True:
+        event, values = window.read()
+        print(values)
+        if event == None:
+            window.close()
+            z = ''
+            break
+        if event == 'English':
+            window['-2-'].update('Regularly send')
+            window['-3-'].update('automatic reply')
+        if event == '中文':
+            window['-2-'].update('定时发送')
+            window['-3-'].update('自动回复')
+        if event == '-2-':
+            window.close()
+            nowtime = time.localtime()
+            z = 'go one'
+            break
+        if event == '-3-':
+            sg.Popup('项目正在开发中\n敬请期待')
+    if z == 'go one':
+        return 'two'
+    else:
+        return 'exit'
+
+
+def init_window1():
+    nowtime = time.localtime()
+    text = f'{nowtime}\n现在时间为：{nowtime[0]}年{nowtime[1]}月{nowtime[2]}日{nowtime[3]}点{nowtime[4]}分{nowtime[5]}秒\n详情：目前是{nowtime[0]}中的第{nowtime[-2]}天'
+    layout2 = [
+        [sg.B('中文', font=('黑体', 20)), sg.T('      '), sg.B('English', font=('黑体', 20))],
+        [sg.T(text=text, key='-tit-')],
+        [sg.T(text='       请输入发送的时间        ', font=('黑体', 20), background_color='white', text_color='black',
+              key='-title-')],
+        [sg.T(text='')],
+        [sg.T(text='年',key='-year-', font=('黑体', 20)), sg.In()],
+        [sg.T(text='月',key='-mouth-', font=('黑体', 20)), sg.In()],
+        [sg.T(text='日',key='-day-', font=('黑体', 20)), sg.In()],
+        [sg.T(text='时',key='-hour-', font=('黑体', 20)), sg.In()],
+        [sg.T(text='分',key='-min-', font=('黑体', 20)), sg.In()],
+        [sg.T(text='秒',key='-sec-', font=('黑体', 20)), sg.In()],
+        [sg.B('确认',key='-B1-'), sg.B('返回',key='-B2-')]
+    ]
+    window1 = sg.Window('定时发送', layout2)
+    text = f'{nowtime}\n现在时间为：{nowtime[0]}年{nowtime[1]}月{nowtime[2]}日{nowtime[3]}点{nowtime[4]}分{nowtime[5]}秒\n详情：目前是{nowtime[0]}中的第{nowtime[-2]}天'
+    while True:
+        event, values = window1.read()
+        if event == None:
+            window1.close()
+            z = 'exit'
+            break
+        if event == 'English':
+            window1['-tit-'].update(f'{nowtime}\nnow time：{nowtime[0]}/{nowtime[1]}/{nowtime[2]}\n{nowtime[3]}:{nowtime[4]}:{nowtime[5]}sec  details：now is {nowtime[0]} day of {nowtime[-2]}')
+            window1['-title-'].update('Please enter the sending time')
+            window1['-year-'].update('year')
+            window1['-mouth-'].update('mouth')
+            window1['-day-'].update('day')
+            window1['-hour-'].update('hour')
+            window1['-min-'].update('min')
+            window1['-sec-'].update('sec')
+            window1['-B1-'].update('Confirm')
+            window1['-B2-'].update('Return')
+        if event == '中文':
+            window1['-tit-'].update(f'{nowtime}\n现在时间为：{nowtime[0]}年{nowtime[1]}月{nowtime[2]}日{nowtime[3]}点{nowtime[4]}分{nowtime[5]}秒\n详情：目前是{nowtime[0]}中的第{nowtime[-2]}天')
+            window1['-title-'].update('       请输入发送的时间        ')
+            window1['-year-'].update('年')
+            window1['-mouth-'].update('月')
+            window1['-day-'].update('日')
+            window1['-hour-'].update('时')
+            window1['-min-'].update('分')
+            window1['-sec-'].update('秒')
+            window1['-B1-'].update('确认')
+            window1['-B2-'].update('返回')
+        if event == '-B2-':
+            z = 'back'
+            break
+        if event == '-B1-':
+            window1.close()
+            z = 'set'
+            break
+    if z == 'back':
+        window1.close()
+        return 'one',None
+    elif z == 'set':
+        window1.close()
+        text_data = []
+        for i in range(len(values)):
+            try:
+                text_data.append(int(values[i]))
+            except:
+                sg.Popup('请输入数字\nplease enter a number')
+                z = 'two'
+                break
+            else:
+                pass
+        if z == 'two':
+            return 'two',None
+        else:
+            return 'set',text_data
+    else:
+        return 'exit',None
+
+def winlog(time_get,what,name):
+    layout3 = [
+        [sg.T(text='请填写接收 联系人/群 名字（微信）:', font=('黑体', 15), key='-text-')],
+        [sg.In()],
+        [sg.B('确认', font=('黑体', 15), key='-button1-'), sg.B('取消', font=('黑体', 15), key='-button2-')]
+    ]
+    window = sg.Window('运行中', layout3)
     while True:
         z = time.localtime()
         geee = [z[0],z[1],z[2],z[3],z[4],z[5]]
@@ -41,25 +145,76 @@ def spend(name,time_get,what):
         print('====='*12)
         if geee == time_get:
             wx = wxauto.WeChat()
-            wx.SendMsg(msg=what,who=how)
+            wx.SendMsg(msg=what,who=name)
             print('===='*12)
             print(f'已发送至"{name}"群聊或联系人，信息为：{what}')
+            sg.Popup('程序完成')
             time.sleep(2)
             break
-    print('已完成')
-
-if __name__ == '__main__':
+def window_name(x):
+    de = None
+    layout3 = [
+        [sg.B('中文', font=('黑体', 20)), sg.T('      '), sg.B('English', font=('黑体', 20))],
+        [sg.T(text='请填写接收 联系人/群 名字（微信）:',font=('黑体',15),key='-text-')],
+        [sg.In()],
+        [sg.T(text='发送信息:',font=('黑体',15),key='-msg-'),sg.In()],
+        [sg.B('确认',font=('黑体',15),key='-button1-'),sg.B('返回',font=('黑体',15),key='-button2-')]
+    ]
+    window = sg.Window('填写接收人',layout3)
     while True:
-        want_time = get_wanttime()
-        how,what = get_how()
-        print(f'请确定信息,发送信息为：',end='')
-        ki = ['年份year', '月份month', '日day', '时', '分', '秒']
-        for i in range(len(want_time)):
-            print(f'{ki[i]}: {i}',end='    ')
-        print(f'\n发送的信息为:   {what}')
-        get_data = input('确定:true;否定:false;默认为启动')
-        if get_data == 'false':
-            pass
-        else:
-            spend(how, want_time,what)
+        event, values = window.read()
+        if event == None:
+            window.close()
             break
+        if event == '-button2-':
+            de = '1'
+            window.close()
+            break
+        if event == '-button1-':
+            window.close()
+            de = '2'
+            break
+        if event == 'English':
+            window['-text-'].update('Please fill in the recipient contact/group name (WeChat):')
+            window['-msg-'].update('Message data:')
+            window['-button1-'].update('confirm')
+            window['-button2-'].update('return')
+        if event == '中文':
+            window['-text-'].update('请填写接收 联系人/群 名字（微信）:')
+            window['-msg-'].update('发送信息:')
+            window['-button1-'].update('确认')
+            window['-button2-'].update('返回')
+    if de == '1':
+        return 'exit'
+    if de == '2':
+        spend(name=values[0],what=values[1],time_get=x)
+
+def run():
+    start = False
+    # window_name()
+    data = 'one'
+    one = None
+    while True:
+        while True:
+            if data == 'one':
+                data = init_window0()
+            if data == 'two':
+                data,one = init_window1()
+            if data == 'exit':
+                quit(0)
+            if data == 'set':
+                print(one)
+                ki = '1'
+                break
+        if ki == '1':
+            info = window_name(one)
+            if info == 'exit':
+                data = 'two'
+            else:
+                start = True
+                break
+    if start == True:
+        sg.Popup('完成程序',font=('宋体',30))
+        quit(0)
+if __name__ == '__main__':
+    run()
