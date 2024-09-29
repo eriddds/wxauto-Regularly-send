@@ -47,9 +47,13 @@ def init_window0():
             z = 'go one'
             break
         if event == '-3-':
-            sg.Popup('项目正在开发中\n敬请期待')
+            window.close()
+            z = 'zd'
+            break
     if z == 'go one':
         return 'two'
+    elif z == 'zd':
+        return 'three'
     else:
         return 'exit'
 
@@ -188,7 +192,69 @@ def window_name(x):
         return 'exit'
     if de == '2':
         spend(name=values[0],what=values[1],time_get=x)
+def win_zd():
+    sg.Popup('当自动回复开始时请勿关闭任何窗口!!!\nDo not close any windows when automatic reply starts!!!')
+    layout3 = [
+        [sg.B('中文', font=('黑体', 20)), sg.T('      '), sg.B('English', font=('黑体', 20))],
+        [sg.T('要自动回复的联系人:',font=('黑体', 20),key='-1-'), sg.Input()],
+        [sg.T('回复的信息:', font=('黑体', 20), key='-2-'), sg.Input()],
+        [sg.B('确认', font=('黑体', 15), key='-button1-'), sg.B('返回', font=('黑体', 15), key='-button2-')]
+    ]
+    window = sg.Window('自动回复', layout3)
+    while True:
+        event, values = window.read()
+        if event == None:
+            window.close()
+            return 'one'
+        if event == '中文':
+            window['-1-'].update('要自动回复的联系人:')
+            window['-2-'].update('回复的信息:')
+            window['-button2-'].update('返回')
+            window['-button1-'].update('确认')
+        if event == 'English':
+            window['-1-'].update('Contacts to be automatically replied to:')
+            window['-2-'].update('Reply message:')
+            window['-button1-'].update('confirm')
+            window['-button2-'].update('return')
+        if event == '-button2-':
+            window.close()
+            return 'one'
+        if event == '-button1-':
+            sg.Popup('程序开始运行请勿关闭任何窗口')
+            print(f'联系人:{values[0]}\n自动回复信息为:{values[1]}')
+            listen_list = [str(values[0])]
+            zd(listen_list=listen_list,x=values[1])
+            return 'stil'
 
+
+def zd(listen_list,x):
+    wx = wxauto.WeChat()
+
+    for i in listen_list:
+        wx.AddListenChat(who=i, savepic=True)
+    # 持续监听消息，并且收到消息后回复“收到”
+    wait = 1  # 设置1秒查看一次是否有新消息
+    while True:
+        msgs = wx.GetListenMessage()
+        for chat in msgs:
+            who = chat.who  # 获取聊天窗口名（人或群名）
+            one_msgs = msgs.get(chat)  # 获取消息内容
+            # 回复收到
+            for msg in one_msgs:
+                msgtype = msg.type  # 获取消息类型
+                content = msg.content  # 获取消息内容，字符串类型的消息内容
+                print(f'【{who}】：{content}')
+                # ===================================================
+                # 处理消息逻辑（如果有）
+                #
+                # 处理消息内容的逻辑每个人都不同，按自己想法写就好了，这里不写了
+                #
+                # ===================================================
+
+                # 如果是好友发来的消息（即非系统消息等），则回复收到
+                if msgtype == 'friend':
+                    chat.SendMsg(x)  # 回复收到
+        time.sleep(wait)
 def run():
     start = False
     # window_name()
@@ -202,10 +268,14 @@ def run():
                 data,one = init_window1()
             if data == 'exit':
                 quit(0)
+            if data == 'stil':
+                pass
             if data == 'set':
                 print(one)
                 ki = '1'
                 break
+            if data == 'three':
+                data = win_zd()
         if ki == '1':
             info = window_name(one)
             if info == 'exit':
@@ -218,3 +288,4 @@ def run():
         quit(0)
 if __name__ == '__main__':
     run()
+    # win_zd()
