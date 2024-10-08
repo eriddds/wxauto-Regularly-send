@@ -25,7 +25,8 @@ def init_window0():
         [sg.B('中文', font=('黑体', 20)), sg.T('      '), sg.B('English', font=('黑体', 20))],
         [sg.B('定时发送', font=('黑体'), key='-2-')],
         [sg.B('自动回复', font=('黑体'), key='-3-')],
-        [sg.T(size=(40, 5))]
+        [sg.B('信息轰炸', font=('黑体'), key='-4-')],
+        # [sg.T(size=(40, 5)])
     ]
     window = sg.Window('微信自动程序', layout1)
     while True:
@@ -38,9 +39,11 @@ def init_window0():
         if event == 'English':
             window['-2-'].update('Regularly send')
             window['-3-'].update('automatic reply')
+            window['-4-'].update('Information bombardment')
         if event == '中文':
             window['-2-'].update('定时发送')
             window['-3-'].update('自动回复')
+            window['-4-'].update('信息轰炸')
         if event == '-2-':
             window.close()
             nowtime = time.localtime()
@@ -50,10 +53,16 @@ def init_window0():
             window.close()
             z = 'zd'
             break
+        if event == '-4-':
+            window.close()
+            z = 'hz'
+            break
     if z == 'go one':
         return 'two'
     elif z == 'zd':
         return 'three'
+    elif z == 'hz':
+        return 'four'
     else:
         return 'exit'
 
@@ -255,7 +264,42 @@ def zd(listen_list,x):
                 if msgtype == 'friend':
                     chat.SendMsg(x)  # 回复收到
         time.sleep(wait)
+
+def hz_win():
+    e = None
+    layout = [
+        [sg.B('中文', font=('黑体', 20)), sg.T('      '), sg.B('English', font=('黑体', 20))],
+        [sg.T('要轰炸的联系人:',font=('黑体', 20),key='-1-'), sg.Input()],
+        [sg.T('轰炸信息:', font=('黑体', 20), key='-2-'), sg.Input()],
+        [sg.B('确认', font=('黑体', 15), key='-button1-'), sg.B('返回', font=('黑体', 15), key='-button2-')]
+    ]
+    window = sg.Window('信息轰炸', layout)
+    while True:
+        event, values = window.read()
+        if event == None:
+            window.close()
+            return 'exit'
+        if event == '中文':
+            window['-1-'].update('要轰炸的联系人:')
+            window['-2-'].update('轰炸信息:')
+            window['-button2-'].update('返回')
+            window['-button1-'].update('确认')
+        if event == 'English':
+            window['-1-'].update('Contact person to bomb:')
+            window['-2-'].update('Bombing information:')
+            window['-button1-'].update('confirm')
+            window['-button2-'].update('return')
+        if event == '-button1-':
+            sg.Popup('确认运行')
+            wx = wxauto.WeChat()
+            e = 0
+            window.close()
+            return e,values[0],values[1]
+        if event == '-button2-':
+            window.close()
+            return 'one',values[0],values[1]
 def run():
+    sdd,sd = None,None
     start = False
     # window_name()
     data = 'one'
@@ -274,8 +318,14 @@ def run():
                 print(one)
                 ki = '1'
                 break
+            if data == 'four':
+                data,sd,sdd = hz_win()
             if data == 'three':
-                data = win_zd()
+                data = win_zd
+            if data == 0:
+                wx = wxauto.WeChat()
+                while True:
+                    wx.SendMsg(msg=sdd, who=sd)
         if ki == '1':
             info = window_name(one)
             if info == 'exit':
@@ -287,5 +337,5 @@ def run():
         sg.Popup('完成程序',font=('宋体',30))
         quit(0)
 if __name__ == '__main__':
+    sg.Popup('程序开始之前请确保微信已经打开\nPlease ensure that WeChat is open before starting the program')
     run()
-    # win_zd()
